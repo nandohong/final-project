@@ -121,22 +121,27 @@ export class App implements OnInit {
             [];
 
         this.menus = Array.isArray(result)
-          ? result.filter((menu: any) =>
-              this.readProperty(menu, [
+          ? result.filter((menu: any) => {
+              const canRead = this.readProperty(menu, [
                 'canRead',
                 'CanRead'
-              ]) !== false
-            )
+              ]);
+
+              return canRead !== false;
+            })
           : [];
       },
-      error: () => {
+      error: (error) => {
+        console.error('Failed to load menus:', error);
         this.menus = [];
       }
     });
   }
 
   private readProperty(item: any, names: string[]): any {
-    if (!item || typeof item !== 'object') return undefined;
+    if (!item || typeof item !== 'object') {
+      return undefined;
+    }
 
     for (const name of names) {
       if (item[name] !== undefined && item[name] !== null) {
@@ -145,8 +150,9 @@ export class App implements OnInit {
     }
 
     const targetNames = names.map((name) => name.toLowerCase());
-    const actualKey = Object.keys(item).find(
-      (key) => targetNames.includes(key.toLowerCase())
+
+    const actualKey = Object.keys(item).find((key) =>
+      targetNames.includes(key.toLowerCase())
     );
 
     return actualKey ? item[actualKey] : undefined;
@@ -160,23 +166,20 @@ export class App implements OnInit {
 
   get parentMenus(): any[] {
     return this.menus.filter((menu) => {
-      const parentId = this.readProperty(menu, [
-        'parentId',
-        'ParentId'
-      ]);
+      const parentId = this.readProperty(menu, ['parentId']);
 
-      return parentId === null ||
+      return (
+        parentId === null ||
         parentId === undefined ||
-        Number(parentId) === 0;
+        Number(parentId) === 0
+      );
     });
   }
 
   getChildren(parent: any): any[] {
     const parentId = this.readProperty(parent, [
       'menuId',
-      'MenuId',
-      'id',
-      'Id'
+      'id'
     ]);
 
     if (parentId === undefined || parentId === null) {
@@ -184,13 +187,12 @@ export class App implements OnInit {
     }
 
     return this.menus.filter((menu) => {
-      const childParentId = this.readProperty(menu, [
-        'parentId',
-        'ParentId'
-      ]);
+      const childParentId = this.readProperty(menu, ['parentId']);
 
-      return this.normalizeId(childParentId) ===
-        this.normalizeId(parentId);
+      return (
+        this.normalizeId(childParentId) ===
+        this.normalizeId(parentId)
+      );
     });
   }
 
@@ -198,71 +200,80 @@ export class App implements OnInit {
     return String(
       this.readProperty(menu, [
         'menuName',
-        'MenuName',
         'name',
-        'Name',
         'title',
-        'Title'
+        'menuTitle',
+        'displayName'
       ]) ?? 'Menu'
-    );
+    ).trim();
   }
 
   getMenuRoute(menu: any): string {
+    const name = this.getMenuName(menu).toLowerCase();
+
+    // Fallback berdasarkan nama menu jika URL dari API kosong
+    // atau tidak cocok dengan route Angular.
+    const nameRoutes: Record<string, string> = {
+      dashboard: '/dashboard',
+      'telephone list': '/telephones',
+      'user list': '/users',
+      settings: '/settings',
+      materials: '/materials',
+      schedule: '/schedule'
+    };
+
     const rawRoute = this.readProperty(menu, [
       'menuUrl',
-      'MenuUrl',
-      'menuURL',
-      'MenuURL',
       'url',
-      'URL',
       'route',
-      'Route',
       'path',
-      'Path'
+      'menuPath',
+      'navigationUrl'
     ]);
 
-    if (typeof rawRoute !== 'string') return '';
+    if (typeof rawRoute === 'string') {
+      const route = rawRoute.trim();
 
-    const route = rawRoute.trim();
+      if (
+        route &&
+        route !== '#' &&
+        route.toLowerCase() !== 'null' &&
+        route.toLowerCase() !== 'undefined'
+      ) {
+        const normalizedRoute = `/${route.replace(/^\/+/, '')}`
+          .replace(/\/+$/, '')
+          .toLowerCase();
 
-    if (
-      !route ||
-      route === '#' ||
-      route.toLowerCase() === 'null' ||
-      route.toLowerCase() === 'undefined'
-    ) {
-      return '';
+        const allowedRoutes = [
+          '/dashboard',
+          '/telephones',
+          '/users',
+          '/settings',
+          '/materials',
+          '/schedule'
+        ];
+
+        if (allowedRoutes.includes(normalizedRoute)) {
+          return normalizedRoute;
+        }
+      }
     }
 
-    const normalizedRoute = route.startsWith('/')
-      ? route
-      : `/${route}`;
-
-    const allowedRoutes = [
-      '/dashboard',
-      '/telephones',
-      '/users',
-      '/settings',
-      '/materials',
-      '/schedule'
-    ];
-
-    return allowedRoutes.includes(normalizedRoute)
-      ? normalizedRoute
-      : '';
+    // Jangan membuat menu grup menjadi link ke halaman utama.
+    return nameRoutes[name] ?? '';
   }
 
   getMenuIcon(menu: any): string {
     const name = this.getMenuName(menu).toLowerCase();
 
-    if (name.includes('dashboard')) return '⌂';
-    if (name.includes('telephone')) return '☎';
-    if (name.includes('user')) return '♙';
-    if (name.includes('setting')) return '⚙';
-    if (name.includes('schedule')) return '▦';
-    if (name.includes('material')) return '▤';
+    if (name.includes('dashboard')) return 'D';
+    if (name.includes('telephone')) return 'T';
+    if (name.includes('user')) return 'U';
+    if (name.includes('setting')) return 'S';
+    if (name.includes('schedule')) return 'C';
+    if (name.includes('material')) return 'M';
 
-    return '◇';
+    return '•';
   }
 
   get pageTitle(): string {
@@ -306,6 +317,7 @@ export class App implements OnInit {
     this.loginForm = { username: '', password: '' };
     this.loginError = '';
     this.sidebarCollapsed = false;
+
     this.router.navigateByUrl('/');
   }
 }

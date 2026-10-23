@@ -7,843 +7,324 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <main class="dashboard">
-      <section class="welcome-banner">
-        <div class="welcome-content">
-          <div class="welcome-label">
-            <span class="welcome-label-dot"></span>
-            ADMIN WORKSPACE
-          </div>
-
-          <h1>Good to see you,<br /><span>Nando.</span></h1>
-
-          <p>
-            Everything you need to manage your telephone records,
-            organized in one simple workspace.
+    <section class="dashboard">
+      <header class="page-heading">
+        <div>
+          <p class="eyebrow">OVERVIEW</p>
+          <h1>Welcome back, Admin.</h1>
+          <p class="description">
+            Manage your telephone records and users from one place.
           </p>
-
-          <div class="welcome-actions">
-            <a routerLink="/telephones" class="primary-link">
-              Go to telephone list <span>→</span>
-            </a>
-            <span class="welcome-note">Your workspace is ready</span>
-          </div>
         </div>
+        <span class="admin-badge">A</span>
+      </header>
 
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-ring ring-outer"></div>
-          <div class="hero-ring ring-middle"></div>
-          <div class="hero-ring ring-inner"></div>
-          <div class="hero-center">
-            <div class="hero-phone">☎</div>
-          </div>
-          <div class="floating-card floating-card-top">
-            <span class="floating-check">✓</span>
-            <span>
-              <strong>Workspace</strong>
-              <small>Ready to use</small>
-            </span>
-          </div>
-          <div class="floating-card floating-card-bottom">
-            <span class="floating-dot"></span>
-            <span>
-              <strong>Management</strong>
-              <small>Simple and organized</small>
-            </span>
-          </div>
-          <div class="hero-leaf leaf-a"></div>
-          <div class="hero-leaf leaf-b"></div>
-        </div>
-      </section>
-
-      <section class="overview-section">
-        <div class="section-heading">
-          <div>
-            <span class="section-eyebrow">YOUR OVERVIEW</span>
-            <h2>Workspace at a glance</h2>
-            <p>Quick access to your main management areas.</p>
-          </div>
-          <div class="overview-status">
-            <span></span>
-            All systems ready
-          </div>
-        </div>
-
-        <div class="overview-grid">
-          <a routerLink="/telephones" class="overview-card telephone-card">
-            <div class="overview-card-top">
-              <div class="overview-icon">☎</div>
-              <span class="overview-arrow">↗</span>
-            </div>
-            <span class="card-eyebrow">RECORD MANAGEMENT</span>
-            <h3>Telephone List</h3>
-            <p>Manage telephone records, review entries, and keep data organized.</p>
-            <div class="overview-card-bottom">
-              <span>Open telephone list</span>
-              <span>→</span>
-            </div>
-          </a>
-
-          <a routerLink="/users" class="overview-card user-card">
-            <div class="overview-card-top">
-              <div class="overview-icon">♙</div>
-              <span class="overview-arrow">↗</span>
-            </div>
-            <span class="card-eyebrow">ACCOUNT MANAGEMENT</span>
-            <h3>User Management</h3>
-            <p>Access the user management workspace and current account details.</p>
-            <div class="overview-card-bottom">
-              <span>Open user list</span>
-              <span>→</span>
-            </div>
-          </a>
-
-          <article class="overview-card system-card">
-            <div class="overview-card-top">
-              <div class="overview-icon">✓</div>
-              <span class="ready-tag"><span></span> READY</span>
-            </div>
-            <span class="card-eyebrow">WORKSPACE STATUS</span>
-            <h3>System Status</h3>
-            <p>Your admin portal is ready for day-to-day management tasks.</p>
-            <div class="overview-card-bottom">
-              <span>Portal status</span>
-              <strong>Active</strong>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="lower-grid">
-        <article class="content-panel quick-panel">
-          <div class="panel-heading">
-            <div>
-              <span class="section-eyebrow">SHORTCUTS</span>
-              <h2>Quick actions</h2>
-            </div>
-            <span class="panel-mark">↗</span>
-          </div>
-
-          <a routerLink="/telephones" class="quick-action">
-            <span class="quick-action-icon">＋</span>
-            <span class="quick-action-copy">
-              <strong>Manage telephone records</strong>
-              <small>View, add, update, and delete records</small>
-            </span>
-            <span class="quick-action-arrow">→</span>
-          </a>
-
-          <a routerLink="/users" class="quick-action">
-            <span class="quick-action-icon">♙</span>
-            <span class="quick-action-copy">
-              <strong>View user management</strong>
-              <small>Open the account management workspace</small>
-            </span>
-            <span class="quick-action-arrow">→</span>
-          </a>
-        </article>
-
-        <article class="content-panel status-panel">
-          <div class="panel-heading">
-            <div>
-              <span class="section-eyebrow">SYSTEM INFORMATION</span>
-              <h2>Workspace details</h2>
-            </div>
-            <div class="status-emblem">✓</div>
-          </div>
-
-          <div class="status-list">
-            <div class="status-row">
-              <span>Portal</span>
-              <strong><i></i> Active</strong>
-            </div>
-            <div class="status-row">
-              <span>Navigation</span>
-              <strong><i></i> Available</strong>
-            </div>
-            <div class="status-row">
-              <span>Interface</span>
-              <strong>Green &amp; White</strong>
-            </div>
-          </div>
-
-          <div class="status-footnote">
-            <span class="footnote-icon">✓</span>
-            <p>Your workspace is set up for a clear, organized workflow.</p>
-          </div>
-        </article>
-      </section>
-
-      <div class="dashboard-bottom">
-        <span>TELEPHONE MANAGEMENT</span>
-        <span>BUILT FOR BETTER WORKFLOWS</span>
+      <div class="section-heading">
+        <h2>Your workspace</h2>
+        <p>Choose a section to get started.</p>
       </div>
-    </main>
+
+      <div class="feature-grid">
+        <a class="feature-card" routerLink="/telephones">
+          <span class="feature-icon phone-icon" aria-hidden="true">
+            <span></span>
+          </span>
+
+          <div class="feature-content">
+            <span class="feature-category">RECORDS</span>
+            <h3>Telephone List</h3>
+            <p>View and manage telephone records.</p>
+          </div>
+
+          <span class="feature-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="feature-card" routerLink="/users">
+          <span class="feature-icon users-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </span>
+
+          <div class="feature-content">
+            <span class="feature-category">ACCOUNTS</span>
+            <h3>User Management</h3>
+            <p>Access the user management section.</p>
+          </div>
+
+          <span class="feature-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <section class="note">
+        <span class="note-line"></span>
+        <div>
+          <h2>Everything in its place.</h2>
+          <p>
+            Use the sidebar to move between sections.
+            Your workspace is designed to keep daily tasks simple.
+          </p>
+        </div>
+      </section>
+    </section>
   `,
   styles: [`
     :host {
       display: block;
-      color: #153e2b;
+      width: 100%;
     }
 
     .dashboard {
       width: 100%;
-      max-width: 1500px;
+      max-width: 1040px;
       margin: 0 auto;
-      padding: 30px;
     }
 
-    .welcome-banner {
-      position: relative;
+    .page-heading {
       display: flex;
-      min-height: 315px;
       align-items: center;
       justify-content: space-between;
-      overflow: hidden;
-      padding: 39px 44px;
-      border: 1px solid #c9ebd2;
-      border-radius: 21px;
-      background: linear-gradient(112deg, #ffffff 0%, #f5fcf6 48%, #e1f7e7 100%);
+      gap: 20px;
+      padding-bottom: 29px;
+      border-bottom: 1px solid #e7ede7;
     }
 
-    .welcome-content {
-      position: relative;
-      z-index: 3;
-      max-width: 570px;
-    }
-
-    .welcome-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 11px;
-      border: 1px solid #c9ebd2;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #166534;
-      font-size: 9px;
-      font-weight: 900;
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #648d6e;
+      font-size: 10px;
+      font-weight: 600;
       letter-spacing: 1.4px;
     }
 
-    .welcome-label-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-    }
-
-    .welcome-content h1 {
-      margin: 23px 0 13px;
-      color: #123b28;
-      font-size: clamp(35px, 4vw, 49px);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -2px;
-    }
-
-    .welcome-content h1 span {
-      color: #15803d;
-    }
-
-    .welcome-content > p {
-      max-width: 445px;
+    .page-heading h1 {
       margin: 0;
-      color: #537660;
+      color: #293b2e;
+      font-size: clamp(24px, 3vw, 30px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -1.15px;
+    }
+
+    .description {
+      margin: 10px 0 0;
+      color: #829087;
       font-size: 12px;
-      line-height: 1.9;
+      line-height: 1.8;
     }
 
-    .welcome-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 17px;
-      margin-top: 25px;
-    }
-
-    .primary-link {
-      display: inline-flex;
-      min-height: 43px;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      padding: 0 15px;
-      border: 1px solid #15803d;
-      border-radius: 8px;
-      background: #15803d;
-      color: #ffffff;
-      font-size: 11px;
-      font-weight: 800;
-      text-decoration: none;
-      transition: background 0.2s ease;
-    }
-
-    .primary-link:hover {
-      background: #14532d;
-    }
-
-    .primary-link span {
-      font-size: 16px;
-    }
-
-    .welcome-note {
-      color: #4c755b;
-      font-size: 10px;
-    }
-
-    .hero-visual {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 43%;
-      height: 100%;
-      min-width: 320px;
-    }
-
-    .hero-ring {
-      position: absolute;
-      top: 50%;
-      left: 53%;
-      aspect-ratio: 1;
-      border: 1px solid #b8e5c5;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .ring-outer {
-      width: 310px;
-      background: #dcfce7;
-      opacity: 0.45;
-    }
-
-    .ring-middle {
-      width: 245px;
-      border-color: #a7dfb7;
-      background: #d2f4db;
-    }
-
-    .ring-inner {
-      width: 180px;
-      border-color: #86cf9d;
-      background: #baf0c9;
-    }
-
-    .hero-center {
-      position: absolute;
-      top: 50%;
-      left: 53%;
+    .admin-badge {
       display: grid;
-      width: 112px;
-      height: 112px;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
       place-items: center;
-      border: 1px solid #a1dcb1;
-      border-radius: 29px;
-      background: #ffffff;
-      box-shadow: 0 16px 45px #14532d12;
-      transform: translate(-50%, -50%) rotate(-7deg);
-    }
-
-    .hero-phone {
-      color: #166534;
-      font-size: 61px;
-      transform: rotate(7deg);
-    }
-
-    .floating-card {
-      position: absolute;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid #d5ebda;
-      border-radius: 10px;
-      background: #ffffff;
-      box-shadow: 0 12px 35px #14532d10;
-    }
-
-    .floating-card strong,
-    .floating-card small {
-      display: block;
-      white-space: nowrap;
-    }
-
-    .floating-card strong {
-      color: #153e2b;
-      font-size: 10px;
-    }
-
-    .floating-card small {
-      margin-top: 5px;
-      color: #5d8068;
-      font-size: 9px;
-    }
-
-    .floating-card-top {
-      top: 53px;
-      right: 13px;
-    }
-
-    .floating-card-bottom {
-      right: 15px;
-      bottom: 45px;
-    }
-
-    .floating-check {
-      display: grid;
-      width: 28px;
-      height: 28px;
-      place-items: center;
-      border-radius: 8px;
-      background: #dcfce7;
-      color: #166534;
-      font-weight: 900;
-    }
-
-    .floating-dot {
-      width: 8px;
-      height: 8px;
+      color: #3d7850;
+      background: #eaf4ec;
+      border: 1px solid #e0eee2;
       border-radius: 50%;
-      background: #22c55e;
-    }
-
-    .hero-leaf {
-      position: absolute;
-      width: 21px;
-      height: 43px;
-      border-radius: 100% 0 100% 0;
-      background: #22c55e;
-    }
-
-    .leaf-a {
-      top: 30px;
-      left: 12%;
-      transform: rotate(24deg);
-    }
-
-    .leaf-b {
-      bottom: 27px;
-      left: 16%;
-      background: #86efac;
-      transform: rotate(-52deg);
-    }
-
-    .overview-section {
-      margin-top: 36px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .section-heading {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 19px;
+      margin: 30px 0 17px;
     }
 
-    .section-eyebrow {
-      color: #15803d;
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 1.7px;
-    }
-
-    .section-heading h2,
-    .panel-heading h2 {
-      margin: 8px 0 0;
-      color: #123b28;
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.6px;
+    .section-heading h2 {
+      margin: 0;
+      color: #334637;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
     }
 
     .section-heading p {
       margin: 7px 0 0;
-      color: #6b8a76;
+      color: #89948c;
       font-size: 11px;
       line-height: 1.7;
     }
 
-    .overview-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 12px;
-      border: 1px solid #d5ebda;
-      border-radius: 7px;
-      background: #ffffff;
-      color: #166534;
-      font-size: 10px;
-      font-weight: 750;
-      white-space: nowrap;
-    }
-
-    .overview-status > span {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #22c55e;
-    }
-
-    .overview-grid {
+    .feature-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 17px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
 
-    .overview-card {
+    .feature-card {
+      position: relative;
       display: flex;
-      min-width: 0;
       flex-direction: column;
-      padding: 22px;
-      border: 1px solid #e0eee3;
-      border-radius: 14px;
-      background: #ffffff;
-      text-decoration: none;
-      transition: transform 0.18s ease, border-color 0.18s ease;
-    }
-
-    .overview-card:hover {
-      transform: translateY(-3px);
-      border-color: #9dd9ae;
-    }
-
-    .overview-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 23px;
-    }
-
-    .overview-icon {
-      display: grid;
-      width: 45px;
-      height: 45px;
-      place-items: center;
-      border: 1px solid #d5ebda;
+      align-items: flex-start;
+      min-height: 222px;
+      padding: 23px;
+      background: #fff;
+      border: 1px solid #e5ece5;
       border-radius: 12px;
-      background: #f0fdf4;
-      color: #166534;
-      font-size: 22px;
+      transition: border-color 160ms ease, background 160ms ease;
     }
 
-    .overview-arrow {
-      color: #3e8a55;
-      font-size: 18px;
+    .feature-card:hover {
+      background: #fcfefc;
+      border-color: #bcd9c2;
     }
 
-    .card-eyebrow {
-      color: #4e8660;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 1.3px;
+    .feature-icon {
+      position: relative;
+      display: grid;
+      width: 39px;
+      height: 39px;
+      place-items: center;
+      color: #4c835b;
+      background: #edf5ee;
+      border-radius: 10px;
     }
 
-    .overview-card h3 {
-      margin: 9px 0;
-      color: #123b28;
-      font-size: 16px;
+    .phone-icon span {
+      position: relative;
+      display: block;
+      width: 13px;
+      height: 21px;
+      border: 1.5px solid currentColor;
+      border-radius: 3px;
+    }
+
+    .phone-icon span::before {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 5px;
+      height: 1px;
+      background: currentColor;
+      content: '';
+    }
+
+    .phone-icon span::after {
+      position: absolute;
+      bottom: 2px;
+      left: 5px;
+      width: 2px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 50%;
+      content: '';
+    }
+
+    .users-icon span:first-child {
+      position: absolute;
+      top: 9px;
+      left: 12px;
+      width: 9px;
+      height: 9px;
+      border: 1.5px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .users-icon span:last-child {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      width: 18px;
+      height: 9px;
+      border: 1.5px solid currentColor;
+      border-radius: 10px 10px 5px 5px;
+    }
+
+    .feature-content {
+      margin-top: 23px;
+    }
+
+    .feature-category {
+      color: #8c9a8f;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.1px;
+    }
+
+    .feature-content h3 {
+      margin: 8px 0 7px;
+      color: #2d4132;
+      font-size: 15px;
+      font-weight: 600;
       letter-spacing: -0.3px;
     }
 
-    .overview-card > p {
-      min-height: 54px;
+    .feature-content p {
       margin: 0;
-      color: #6b8a76;
+      color: #849087;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .feature-arrow {
+      position: absolute;
+      top: 23px;
+      right: 22px;
+      color: #7b9981;
+      font-size: 16px;
+      transition: transform 160ms ease;
+    }
+
+    .feature-card:hover .feature-arrow {
+      transform: translate(2px, -2px);
+    }
+
+    .note {
+      display: flex;
+      gap: 15px;
+      margin-top: 31px;
+      padding: 21px 22px;
+      background: #f2f7f2;
+      border: 1px solid #e8f0e8;
+      border-radius: 10px;
+    }
+
+    .note-line {
+      flex: 0 0 3px;
+      align-self: stretch;
+      background: #8bb797;
+      border-radius: 3px;
+    }
+
+    .note h2 {
+      margin: 0 0 7px;
+      color: #3b5842;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .note p {
+      max-width: 650px;
+      margin: 0;
+      color: #7d8c80;
       font-size: 11px;
       line-height: 1.8;
     }
 
-    .overview-card-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 1px solid #eaf3ec;
-      color: #166534;
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    .overview-card-bottom strong {
-      color: #15803d;
-      font-size: 10px;
-    }
-
-    .ready-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 8px;
-      border: 1px solid #d5ebda;
-      border-radius: 6px;
-      background: #f0fdf4;
-      color: #166534;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 0.7px;
-    }
-
-    .ready-tag span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-    }
-
-    .lower-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 17px;
-      margin-top: 22px;
-    }
-
-    .content-panel {
-      min-width: 0;
-      padding: 23px;
-      border: 1px solid #e0eee3;
-      border-radius: 14px;
-      background: #ffffff;
-    }
-
-    .panel-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .panel-heading h2 {
-      font-size: 17px;
-    }
-
-    .panel-mark {
-      color: #3e8a55;
-      font-size: 19px;
-    }
-
-    .quick-action {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 15px 0;
-      border-top: 1px solid #edf5ef;
-      text-decoration: none;
-    }
-
-    .quick-action-icon {
-      display: grid;
-      width: 38px;
-      height: 38px;
-      flex: 0 0 38px;
-      place-items: center;
-      border: 1px solid #d5ebda;
-      border-radius: 10px;
-      background: #f0fdf4;
-      color: #166534;
-      font-size: 19px;
-    }
-
-    .quick-action-copy {
-      display: flex;
-      min-width: 0;
-      flex: 1;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .quick-action-copy strong {
-      color: #153e2b;
-      font-size: 11px;
-    }
-
-    .quick-action-copy small {
-      color: #6b8a76;
-      font-size: 10px;
-      line-height: 1.6;
-    }
-
-    .quick-action-arrow {
-      color: #3e8a55;
-      font-size: 17px;
-    }
-
-    .status-emblem {
-      display: grid;
-      width: 36px;
-      height: 36px;
-      place-items: center;
-      border: 1px solid #d5ebda;
-      border-radius: 11px;
-      background: #dcfce7;
-      color: #166534;
-      font-weight: 900;
-    }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0;
-      border-top: 1px solid #edf5ef;
-      color: #5d8068;
-      font-size: 11px;
-    }
-
-    .status-row strong {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      color: #166534;
-      font-size: 10px;
-      font-weight: 800;
-      text-align: right;
-    }
-
-    .status-row strong i {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-    }
-
-    .status-footnote {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-top: 15px;
-      padding: 13px;
-      border: 1px solid #d5ebda;
-      border-radius: 9px;
-      background: #f5fcf6;
-    }
-
-    .footnote-icon {
-      display: grid;
-      width: 22px;
-      height: 22px;
-      flex: 0 0 22px;
-      place-items: center;
-      border-radius: 7px;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 10px;
-      font-weight: 900;
-    }
-
-    .status-footnote p {
-      margin: 2px 0 0;
-      color: #4e755b;
-      font-size: 10px;
-      line-height: 1.7;
-    }
-
-    .dashboard-bottom {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 26px;
-      padding: 16px 2px 0;
-      border-top: 1px solid #e0eee3;
-      color: #779681;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    @media (max-width: 1100px) {
-      .dashboard {
-        padding: 24px;
+    @media (max-width: 650px) {
+      .page-heading {
+        align-items: flex-start;
+        padding-bottom: 23px;
       }
 
-      .welcome-banner {
-        padding: 32px;
+      .admin-badge {
+        flex-basis: 35px;
+        width: 35px;
+        height: 35px;
       }
 
-      .hero-visual {
-        right: -30px;
-        opacity: 0.8;
-      }
-
-      .overview-grid {
+      .feature-grid {
+        grid-template-columns: 1fr;
         gap: 12px;
       }
 
-      .overview-card {
+      .feature-card {
+        min-height: 200px;
+        padding: 20px;
+      }
+
+      .note {
         padding: 17px;
-      }
-    }
-
-    @media (max-width: 850px) {
-      .hero-visual {
-        right: -95px;
-        opacity: 0.4;
-      }
-
-      .welcome-content {
-        max-width: 75%;
-      }
-
-      .overview-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .lower-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .dashboard {
-        padding: 17px;
-      }
-
-      .welcome-banner {
-        min-height: 0;
-        padding: 26px 22px;
-      }
-
-      .welcome-content {
-        max-width: 100%;
-      }
-
-      .welcome-content h1 {
-        font-size: 36px;
-      }
-
-      .hero-visual {
-        display: none;
-      }
-
-      .welcome-actions {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .section-heading {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .overview-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .overview-card > p {
-        min-height: 0;
-      }
-
-      .content-panel {
-        padding: 18px;
-      }
-
-      .dashboard-bottom {
-        flex-direction: column;
       }
     }
   `]

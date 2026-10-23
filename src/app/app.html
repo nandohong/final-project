@@ -1,181 +1,156 @@
 
-<div *ngIf="!currentUser; else portal" class="login-page">
-  <section class="login-card">
-    <a routerLink="/dashboard" class="login-brand">
-      <span class="brand-mark">T</span>
-      <span>
-        <strong>Telephone</strong>
-        <small>MANAGEMENT PORTAL</small>
-      </span>
-    </a>
+<div class="app-shell">
+  @if (!currentUser) {
+    <main class="login-page">
+      <section class="login-card">
+        <div class="brand">
+          <span class="brand-symbol">T</span>
+          <span class="brand-name">Telephone<span>Management</span></span>
+        </div>
 
-    <div class="login-heading">
-      <span class="eyebrow">WELCOME BACK</span>
-      <h1>Sign in to your workspace.</h1>
-      <p>Manage your telephone records in one place.</p>
-    </div>
+        <div class="login-heading">
+          <p class="section-kicker">ADMIN WORKSPACE</p>
+          <h1>Welcome back.</h1>
+          <p>Sign in to continue to your workspace.</p>
+        </div>
 
-    <form (ngSubmit)="login()">
-      <label for="username">Username</label>
-      <input
-        id="username"
-        name="username"
-        type="text"
-        [(ngModel)]="loginForm.username"
-        placeholder="Enter your username"
-        autocomplete="username"
-        required
-      />
+        <form class="login-form" (ngSubmit)="login()">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            [(ngModel)]="loginForm.username"
+            placeholder="Enter your username"
+            autocomplete="username"
+            required
+          />
 
-      <label for="password">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        [(ngModel)]="loginForm.password"
-        placeholder="Enter your password"
-        autocomplete="current-password"
-        required
-      />
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            [(ngModel)]="loginForm.password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          />
 
-      <p *ngIf="loginError" class="login-error">{{ loginError }}</p>
+          @if (loginError) {
+            <p class="form-message">{{ loginError }}</p>
+          }
 
-      <button class="primary-button login-submit" type="submit" [disabled]="isLoggingIn">
-        <span>{{ isLoggingIn ? 'Signing in...' : 'Sign in' }}</span>
-        <span aria-hidden="true">→</span>
-      </button>
-    </form>
+          <button type="submit" class="primary-button" [disabled]="isLoggingIn">
+            {{ isLoggingIn ? 'Signing in…' : 'Sign in' }}
+          </button>
+        </form>
 
-    <div class="login-bottom">
-      <span class="secure-dot"></span>
-      Telephone Management System
-    </div>
-  </section>
-</div>
-
-<ng-template #portal>
-  <div class="app-shell">
-    <aside class="sidebar" [class.sidebar-open]="sidebarCollapsed">
-      <a class="brand" routerLink="/dashboard" (click)="closeSidebarOnMobile()">
-        <span class="brand-mark">T</span>
-        <span class="brand-copy">
-          <strong>Telephone</strong>
-          <small>MANAGEMENT</small>
-        </span>
-      </a>
-
-      <div class="workspace-label">WORKSPACE</div>
-
-      <nav class="navigation">
-        <a
-          class="nav-link"
-          routerLink="/dashboard"
-          routerLinkActive="nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeSidebarOnMobile()"
-        >
-          <span class="nav-icon">⌂</span>
-          <span class="nav-text">Dashboard</span>
+        <p class="login-bottom">Telephone Management System</p>
+      </section>
+    </main>
+  } @else {
+    <div class="workspace" [class.sidebar-open]="!sidebarCollapsed">
+      <aside class="sidebar">
+        <a class="brand" routerLink="/dashboard" (click)="closeSidebarOnMobile()">
+          <span class="brand-symbol">T</span>
+          <span class="brand-name">
+            Telephone
+            <span>Management</span>
+          </span>
         </a>
 
-        <ng-container *ngFor="let menu of parentMenus">
-          <ng-container *ngIf="getChildren(menu).length > 0; else standaloneMenu">
-            <div class="nav-section">
-              <div class="nav-section-heading">
-                <span class="nav-icon">{{ getMenuIcon(menu) }}</span>
-                <span>{{ getMenuName(menu) }}</span>
-              </div>
+        <p class="nav-heading">MENU</p>
 
+        <nav class="navigation">
+          @for (menu of parentMenus; track $index) {
+            @if (getChildren(menu).length === 0) {
               <a
-                *ngFor="let child of getChildren(menu)"
-                class="nav-child"
-                [routerLink]="getMenuRoute(child)"
-                routerLinkActive="nav-child-active"
+                class="nav-link"
+                [routerLink]="getMenuRoute(menu)"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
                 (click)="closeSidebarOnMobile()"
               >
-                <span class="nav-child-indicator"></span>
-                <span>{{ getMenuName(child) }}</span>
+                <span class="nav-symbol">{{ getMenuIcon(menu) }}</span>
+                <span>{{ getMenuName(menu) }}</span>
               </a>
-            </div>
-          </ng-container>
+            } @else {
+              <div class="nav-group">
+                <div class="nav-group-heading">
+                  <span class="nav-symbol">{{ getMenuIcon(menu) }}</span>
+                  <span>{{ getMenuName(menu) }}</span>
+                </div>
 
-          <ng-template #standaloneMenu>
-            <a
-              *ngIf="getMenuRoute(menu) && getMenuRoute(menu) !== '/dashboard'"
-              class="nav-link"
-              [routerLink]="getMenuRoute(menu)"
-              routerLinkActive="nav-active"
-              (click)="closeSidebarOnMobile()"
-            >
-              <span class="nav-icon">{{ getMenuIcon(menu) }}</span>
-              <span class="nav-text">{{ getMenuName(menu) }}</span>
-            </a>
-          </ng-template>
-        </ng-container>
-      </nav>
+                @for (child of getChildren(menu); track $index) {
+                  <a
+                    class="nav-link nav-child"
+                    [routerLink]="getMenuRoute(child)"
+                    routerLinkActive="active"
+                    (click)="closeSidebarOnMobile()"
+                  >
+                    <span class="nav-child-indicator"></span>
+                    <span>{{ getMenuName(child) }}</span>
+                  </a>
+                }
+              </div>
+            }
+          }
+        </nav>
 
-      <div class="sidebar-bottom">
-        <div class="sidebar-bottom-icon">✓</div>
-        <div>
-          <strong>Workspace active</strong>
-          <small>Administrator access</small>
+        <div class="sidebar-bottom">
+          <div class="account">
+            <span class="account-avatar">A</span>
+            <span class="account-details">
+              <strong>Admin</strong>
+              <small>Administrator</small>
+            </span>
+            <button
+              type="button"
+              class="logout-button"
+              (click)="logout()"
+              aria-label="Sign out"
+              title="Sign out"
+            >↗</button>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
 
-    <div
-      *ngIf="sidebarCollapsed"
-      class="mobile-scrim"
-      (click)="closeSidebarOnMobile()"
-    ></div>
-
-    <main class="main-area">
-      <header class="topbar">
-        <div class="topbar-start">
+      <div class="main-column">
+        <header class="topbar">
           <button
-            class="menu-toggle"
             type="button"
+            class="menu-toggle"
             (click)="toggleSidebar()"
             aria-label="Toggle navigation"
-          >☰</button>
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
 
-          <div class="page-breadcrumb">
+          <div class="breadcrumb">
             <span>Workspace</span>
             <span class="breadcrumb-slash">/</span>
             <strong>{{ pageTitle }}</strong>
           </div>
-        </div>
 
-        <div class="topbar-end">
-          <div class="online-indicator">
-            <span></span>
-            <span>System online</span>
+          <div class="topbar-account">
+            <span class="online-dot"></span>
+            <span>Admin</span>
+            <span class="topbar-avatar">A</span>
           </div>
+        </header>
 
-          <div class="profile-divider"></div>
+        <main class="page-content">
+          <router-outlet />
+        </main>
 
-          <div class="profile">
-            <div class="profile-avatar">{{ getInitials() }}</div>
-            <div class="profile-details">
-              <strong>{{ currentUser.username || currentUser.userName || 'Admin' }}</strong>
-              <small>Administrator</small>
-            </div>
-          </div>
-
-          <button type="button" class="logout-button" (click)="logout()">
-            Log out <span aria-hidden="true">↗</span>
-          </button>
-        </div>
-      </header>
-
-      <section class="page-content">
-        <router-outlet></router-outlet>
-      </section>
-
-      <footer class="app-footer">
-        <span>© Telephone Management</span>
-        <span>BUILT FOR BETTER WORKFLOWS</span>
-      </footer>
-    </main>
-  </div>
-</ng-template>
+        <footer class="app-footer">
+          <span>Telephone Management</span>
+          <span>Admin workspace</span>
+        </footer>
+      </div>
+    </div>
+  }
+</div>
