@@ -18,7 +18,7 @@ export type TelephoneInput = Omit<Telephone, 'id' | 'dateTime'>;
   providedIn: 'root'
 })
 export class TelephoneService {
-  private readonly apiUrl = 'http://localhost:5046/api/Telephone';
+  private readonly apiUrl = 'http://localhost:5046/api/Telephone';  
 
   constructor(private http: HttpClient) {}
 

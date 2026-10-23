@@ -1,165 +1,181 @@
 
-<div class="page">
-  <header class="header">
-    <div>
-      <p class="eyebrow">ANGULAR 21 · REST API</p>
-      <h1>Telephone Management</h1>
-      <p>Kelola data pengguna dan nomor telepon.</p>
+<div *ngIf="!currentUser; else portal" class="login-page">
+  <section class="login-card">
+    <a routerLink="/dashboard" class="login-brand">
+      <span class="brand-mark">T</span>
+      <span>
+        <strong>Telephone</strong>
+        <small>MANAGEMENT PORTAL</small>
+      </span>
+    </a>
+
+    <div class="login-heading">
+      <span class="eyebrow">WELCOME BACK</span>
+      <h1>Sign in to your workspace.</h1>
+      <p>Manage your telephone records in one place.</p>
     </div>
 
-    <div class="total">
-      <span>Total Data</span>
-      <strong>{{ telephones.length }}</strong>
+    <form (ngSubmit)="login()">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        name="username"
+        type="text"
+        [(ngModel)]="loginForm.username"
+        placeholder="Enter your username"
+        autocomplete="username"
+        required
+      />
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="loginForm.password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+      />
+
+      <p *ngIf="loginError" class="login-error">{{ loginError }}</p>
+
+      <button class="primary-button login-submit" type="submit" [disabled]="isLoggingIn">
+        <span>{{ isLoggingIn ? 'Signing in...' : 'Sign in' }}</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+
+    <div class="login-bottom">
+      <span class="secure-dot"></span>
+      Telephone Management System
     </div>
-  </header>
-
-  <main class="container">
-    @if (successMessage) {
-      <div class="message success">{{ successMessage }}</div>
-    }
-
-    @if (errorMessage) {
-      <div class="message error">{{ errorMessage }}</div>
-    }
-
-    <section class="form-card">
-      <h2>{{ editingId !== null ? 'Edit Data Telephone' : 'Tambah Telephone' }}</h2>
-
-      <form (ngSubmit)="saveTelephone()">
-        <div class="form-grid">
-          <label>
-            Nama Pengguna
-            <input
-              type="text"
-              name="namaUser"
-              [(ngModel)]="formData.namaUser"
-              placeholder="Masukkan nama"
-              required
-            />
-          </label>
-
-          <label>
-            Nomor Telepon
-            <input
-              type="tel"
-              name="noTelp"
-              [(ngModel)]="formData.noTelp"
-              placeholder="Masukkan nomor telepon"
-              required
-            />
-          </label>
-
-          <label>
-            Alamat
-            <input
-              type="text"
-              name="alamat"
-              [(ngModel)]="formData.alamat"
-              placeholder="Masukkan alamat"
-              required
-            />
-          </label>
-
-          <label>
-            Kode Pos
-            <input
-              type="text"
-              name="kodePost"
-              [(ngModel)]="formData.kodePost"
-              placeholder="Masukkan kode pos"
-              required
-            />
-          </label>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">
-            {{ editingId !== null ? 'Simpan Perubahan' : 'Tambah Data' }}
-          </button>
-
-          @if (editingId !== null) {
-            <button
-              type="button"
-              class="btn-secondary"
-              (click)="resetForm()"
-            >
-              Batal Edit
-            </button>
-          }
-        </div>
-      </form>
-    </section>
-
-    <section class="table-card">
-      <div class="table-heading">
-        <div>
-          <h2>Daftar Telephone</h2>
-          <p>Data yang diambil dari backend API.</p>
-        </div>
-
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="loadTelephones()"
-          [disabled]="loading"
-        >
-          Muat Ulang
-        </button>
-      </div>
-
-      @if (loading) {
-        <p class="empty">Memuat data...</p>
-      } @else if (telephones.length === 0) {
-        <p class="empty">Belum ada data telephone.</p>
-      } @else {
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nama Pengguna</th>
-                <th>Alamat</th>
-                <th>No. Telepon</th>
-                <th>Kode Pos</th>
-                <th>Tanggal</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              @for (telephone of telephones; track telephone.id) {
-                <tr>
-                  <td>{{ telephone.id }}</td>
-                  <td>{{ telephone.namaUser }}</td>
-                  <td>{{ telephone.alamat }}</td>
-                  <td>{{ telephone.noTelp }}</td>
-                  <td>{{ telephone.kodePost }}</td>
-                  <td>{{ telephone.dateTime | date:'dd/MM/yyyy HH:mm' }}</td>
-                  <td>
-                    <div class="row-actions">
-                      <button
-                        type="button"
-                        class="btn-edit"
-                        (click)="editTelephone(telephone)"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        type="button"
-                        class="btn-delete"
-                        (click)="deleteTelephone(telephone)"
-                      >
-                        Hapus
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
-    </section>
-  </main>
+  </section>
 </div>
+
+<ng-template #portal>
+  <div class="app-shell">
+    <aside class="sidebar" [class.sidebar-open]="sidebarCollapsed">
+      <a class="brand" routerLink="/dashboard" (click)="closeSidebarOnMobile()">
+        <span class="brand-mark">T</span>
+        <span class="brand-copy">
+          <strong>Telephone</strong>
+          <small>MANAGEMENT</small>
+        </span>
+      </a>
+
+      <div class="workspace-label">WORKSPACE</div>
+
+      <nav class="navigation">
+        <a
+          class="nav-link"
+          routerLink="/dashboard"
+          routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeSidebarOnMobile()"
+        >
+          <span class="nav-icon">⌂</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <ng-container *ngFor="let menu of parentMenus">
+          <ng-container *ngIf="getChildren(menu).length > 0; else standaloneMenu">
+            <div class="nav-section">
+              <div class="nav-section-heading">
+                <span class="nav-icon">{{ getMenuIcon(menu) }}</span>
+                <span>{{ getMenuName(menu) }}</span>
+              </div>
+
+              <a
+                *ngFor="let child of getChildren(menu)"
+                class="nav-child"
+                [routerLink]="getMenuRoute(child)"
+                routerLinkActive="nav-child-active"
+                (click)="closeSidebarOnMobile()"
+              >
+                <span class="nav-child-indicator"></span>
+                <span>{{ getMenuName(child) }}</span>
+              </a>
+            </div>
+          </ng-container>
+
+          <ng-template #standaloneMenu>
+            <a
+              *ngIf="getMenuRoute(menu) && getMenuRoute(menu) !== '/dashboard'"
+              class="nav-link"
+              [routerLink]="getMenuRoute(menu)"
+              routerLinkActive="nav-active"
+              (click)="closeSidebarOnMobile()"
+            >
+              <span class="nav-icon">{{ getMenuIcon(menu) }}</span>
+              <span class="nav-text">{{ getMenuName(menu) }}</span>
+            </a>
+          </ng-template>
+        </ng-container>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-bottom-icon">✓</div>
+        <div>
+          <strong>Workspace active</strong>
+          <small>Administrator access</small>
+        </div>
+      </div>
+    </aside>
+
+    <div
+      *ngIf="sidebarCollapsed"
+      class="mobile-scrim"
+      (click)="closeSidebarOnMobile()"
+    ></div>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-start">
+          <button
+            class="menu-toggle"
+            type="button"
+            (click)="toggleSidebar()"
+            aria-label="Toggle navigation"
+          >☰</button>
+
+          <div class="page-breadcrumb">
+            <span>Workspace</span>
+            <span class="breadcrumb-slash">/</span>
+            <strong>{{ pageTitle }}</strong>
+          </div>
+        </div>
+
+        <div class="topbar-end">
+          <div class="online-indicator">
+            <span></span>
+            <span>System online</span>
+          </div>
+
+          <div class="profile-divider"></div>
+
+          <div class="profile">
+            <div class="profile-avatar">{{ getInitials() }}</div>
+            <div class="profile-details">
+              <strong>{{ currentUser.username || currentUser.userName || 'Admin' }}</strong>
+              <small>Administrator</small>
+            </div>
+          </div>
+
+          <button type="button" class="logout-button" (click)="logout()">
+            Log out <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="page-content">
+        <router-outlet></router-outlet>
+      </section>
+
+      <footer class="app-footer">
+        <span>© Telephone Management</span>
+        <span>BUILT FOR BETTER WORKFLOWS</span>
+      </footer>
+    </main>
+  </div>
+</ng-template>

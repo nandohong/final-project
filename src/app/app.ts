@@ -1,140 +1,311 @@
 
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  TelephoneService,
-  Telephone,
-  TelephoneInput
-} from './services/telephone';
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet
+} from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, DatePipe],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  telephones: Telephone[] = [];
+  private readonly apiUrl = 'http://localhost:5046/api';
 
-  formData: TelephoneInput = this.emptyForm();
-  editingId: number | null = null;
+  currentUser: any = null;
+  menus: any[] = [];
 
-  loading = false;
-  errorMessage = '';
-  successMessage = '';
+  loginForm = {
+    username: '',
+    password: ''
+  };
 
-  constructor(private telephoneService: TelephoneService) {}
+  loginError = '';
+  isLoggingIn = false;
+  sidebarCollapsed = false;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.loadTelephones();
+    const savedUser = localStorage.getItem('currentUser');
+
+    if (!savedUser) return;
+
+    try {
+      this.currentUser = JSON.parse(savedUser);
+      this.loadMenus();
+    } catch {
+      localStorage.removeItem('currentUser');
+    }
   }
 
-  emptyForm(): TelephoneInput {
-    return {
-      namaUser: '',
-      alamat: '',
-      noTelp: '',
-      kodePost: ''
-    };
-  }
+  login(): void {
+    this.loginError = '';
+    this.isLoggingIn = true;
 
-  loadTelephones(): void {
-    this.loading = true;
-    this.errorMessage = '';
+    this.http.post<any>(
+      `${this.apiUrl}/Auth/login`,
+      this.loginForm
+    ).subscribe({
+      next: (response) => {
+        const user = response?.user ?? response?.data ?? response;
 
-    this.telephoneService.getTelephones().subscribe({
-      next: (data) => {
-        this.telephones = data;
-        this.loading = false;
+        this.currentUser = {
+          ...user,
+          userId:
+            user?.userId ??
+            user?.UserId ??
+            user?.id ??
+            user?.Id ??
+            response?.userId ??
+            response?.UserId ??
+            1,
+          username:
+            user?.username ??
+            user?.Username ??
+            user?.userName ??
+            user?.UserName ??
+            response?.username ??
+            this.loginForm.username
+        };
+
+        localStorage.setItem(
+          'currentUser',
+          JSON.stringify(this.currentUser)
+        );
+
+        this.isLoggingIn = false;
+        this.loadMenus();
+        this.router.navigateByUrl('/dashboard');
       },
-      error: () => {
-        this.errorMessage =
-          'Gagal mengambil data. Periksa backend dan koneksi database.';
-        this.loading = false;
+      error: (error) => {
+        this.isLoggingIn = false;
+        this.loginError =
+          error?.error?.message ??
+          error?.error?.title ??
+          'Login failed. Please check your username and password.';
       }
     });
   }
 
-  saveTelephone(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
+  loadMenus(): void {
+    const userId = this.currentUser?.userId ?? 1;
 
-    if (this.editingId !== null) {
-      const id = this.editingId;
-      const existing = this.telephones.find((t) => t.id === id);
+    this.http.get<any>(
+      `${this.apiUrl}/Menus/${userId}`
+    ).subscribe({
+      next: (response) => {
+        const result = Array.isArray(response)
+          ? response
+          : response?.$values ??
+            response?.items ??
+            response?.data ??
+            response?.menus ??
+            [];
 
-      const data: Telephone = {
-        id,
-        ...this.formData,
-        dateTime: existing?.dateTime ?? new Date().toISOString()
-      };
+        this.menus = Array.isArray(result)
+          ? result.filter((menu: any) =>
+              this.readProperty(menu, [
+                'canRead',
+                'CanRead'
+              ]) !== false
+            )
+          : [];
+      },
+      error: () => {
+        this.menus = [];
+      }
+    });
+  }
 
-      this.telephoneService.updateTelephone(id, data).subscribe({
-        next: () => {
-          this.successMessage = 'Data berhasil diperbarui.';
-          this.resetForm();
-          this.loadTelephones();
-        },
-        error: () => {
-          this.errorMessage = 'Gagal memperbarui data.';
-        }
-      });
-    } else {
-      this.telephoneService.createTelephone(this.formData).subscribe({
-        next: () => {
-          this.successMessage = 'Data berhasil ditambahkan.';
-          this.resetForm();
-          this.loadTelephones();
-        },
-        error: () => {
-          this.errorMessage = 'Gagal menambahkan data.';
-        }
-      });
+  private readProperty(item: any, names: string[]): any {
+    if (!item || typeof item !== 'object') return undefined;
+
+    for (const name of names) {
+      if (item[name] !== undefined && item[name] !== null) {
+        return item[name];
+      }
     }
-  }
 
-  editTelephone(telephone: Telephone): void {
-    this.editingId = telephone.id;
-    this.formData = {
-      namaUser: telephone.namaUser,
-      alamat: telephone.alamat,
-      noTelp: telephone.noTelp,
-      kodePost: telephone.kodePost
-    };
-
-    this.successMessage = '';
-    this.errorMessage = '';
-  }
-
-  deleteTelephone(telephone: Telephone): void {
-    const confirmed = window.confirm(
-      `Yakin ingin menghapus data ${telephone.namaUser}?`
+    const targetNames = names.map((name) => name.toLowerCase());
+    const actualKey = Object.keys(item).find(
+      (key) => targetNames.includes(key.toLowerCase())
     );
 
-    if (!confirmed) {
-      return;
-    }
+    return actualKey ? item[actualKey] : undefined;
+  }
 
-    this.errorMessage = '';
-    this.successMessage = '';
+  private normalizeId(value: any): string {
+    return value === undefined || value === null
+      ? ''
+      : String(value);
+  }
 
-    this.telephoneService.deleteTelephone(telephone.id).subscribe({
-      next: () => {
-        this.successMessage = 'Data berhasil dihapus.';
-        if (this.editingId === telephone.id) {
-          this.resetForm();
-        }
-        this.loadTelephones();
-      },
-      error: () => {
-        this.errorMessage = 'Gagal menghapus data.';
-      }
+  get parentMenus(): any[] {
+    return this.menus.filter((menu) => {
+      const parentId = this.readProperty(menu, [
+        'parentId',
+        'ParentId'
+      ]);
+
+      return parentId === null ||
+        parentId === undefined ||
+        Number(parentId) === 0;
     });
   }
 
-  resetForm(): void {
-    this.formData = this.emptyForm();
-    this.editingId = null;
+  getChildren(parent: any): any[] {
+    const parentId = this.readProperty(parent, [
+      'menuId',
+      'MenuId',
+      'id',
+      'Id'
+    ]);
+
+    if (parentId === undefined || parentId === null) {
+      return [];
+    }
+
+    return this.menus.filter((menu) => {
+      const childParentId = this.readProperty(menu, [
+        'parentId',
+        'ParentId'
+      ]);
+
+      return this.normalizeId(childParentId) ===
+        this.normalizeId(parentId);
+    });
+  }
+
+  getMenuName(menu: any): string {
+    return String(
+      this.readProperty(menu, [
+        'menuName',
+        'MenuName',
+        'name',
+        'Name',
+        'title',
+        'Title'
+      ]) ?? 'Menu'
+    );
+  }
+
+  getMenuRoute(menu: any): string {
+    const rawRoute = this.readProperty(menu, [
+      'menuUrl',
+      'MenuUrl',
+      'menuURL',
+      'MenuURL',
+      'url',
+      'URL',
+      'route',
+      'Route',
+      'path',
+      'Path'
+    ]);
+
+    if (typeof rawRoute !== 'string') return '';
+
+    const route = rawRoute.trim();
+
+    if (
+      !route ||
+      route === '#' ||
+      route.toLowerCase() === 'null' ||
+      route.toLowerCase() === 'undefined'
+    ) {
+      return '';
+    }
+
+    const normalizedRoute = route.startsWith('/')
+      ? route
+      : `/${route}`;
+
+    const allowedRoutes = [
+      '/dashboard',
+      '/telephones',
+      '/users',
+      '/settings',
+      '/materials',
+      '/schedule'
+    ];
+
+    return allowedRoutes.includes(normalizedRoute)
+      ? normalizedRoute
+      : '';
+  }
+
+  getMenuIcon(menu: any): string {
+    const name = this.getMenuName(menu).toLowerCase();
+
+    if (name.includes('dashboard')) return '⌂';
+    if (name.includes('telephone')) return '☎';
+    if (name.includes('user')) return '♙';
+    if (name.includes('setting')) return '⚙';
+    if (name.includes('schedule')) return '▦';
+    if (name.includes('material')) return '▤';
+
+    return '◇';
+  }
+
+  get pageTitle(): string {
+    const url = this.router.url.split('?')[0];
+
+    if (url.startsWith('/telephones')) return 'Telephone List';
+    if (url.startsWith('/users')) return 'User List';
+    if (url.startsWith('/settings')) return 'Settings';
+    if (url.startsWith('/materials')) return 'Materials';
+    if (url.startsWith('/schedule')) return 'Schedule';
+
+    return 'Dashboard';
+  }
+
+  getInitials(): string {
+    const username =
+      this.currentUser?.username ??
+      this.currentUser?.userName ??
+      'Admin';
+
+    return String(username)
+      .trim()
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  closeSidebarOnMobile(): void {
+    if (window.innerWidth <= 760) {
+      this.sidebarCollapsed = false;
+    }
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUser = null;
+    this.menus = [];
+    this.loginForm = { username: '', password: '' };
+    this.loginError = '';
+    this.sidebarCollapsed = false;
+    this.router.navigateByUrl('/');
   }
 }
